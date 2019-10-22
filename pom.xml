@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.kabouros</groupId>
+	<artifactId>kabouros-release</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+	</properties>
+
+	<scm>
+		<connection>scm:git:git://github.com/kabouros/kabouros-release.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/kabouros/kabouros-release.git</developerConnection>
+		<url>https://github.com/kabouros/kabouros-release</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.kabouros</groupId>
+				<artifactId>kabouros-spring-dependencies</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.kabouros</groupId>
+				<artifactId>kabouros-spring-parent</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<!-- 打包时自动将jar和pom安装到本地仓库 -->
+			<plugin>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<createChecksum>true</createChecksum>
+				</configuration>
+			</plugin>
+			<!-- 插件地址：http://maven.apache.org/maven-release/maven-release-plugin/index.html -->
+			<!-- release版本自动构建<只能构建快照版本，即以-SNAPSHOT结尾的版本>，构建流程如下： -->
+			<!-- mvn release:clean #清理 -->
+			<!-- 如果要创建分支的话执行： mvn release:branch -DbranchName=分支名称 -DupdateBranchVersions=true -DupdateWorkingCopyVersions=false -->
+			<!-- 比如指定分支名称为0.0.1.x，表示会有版本0.0.1.1，0.0.1.2等等，如果分支名称不是这个规范后面将改变不了版本号 -->
+			<!-- 接下来会提示修改版本号，比如修改成：0.0.1.1-SNAPSHOT -->
+			<!-- mvn release:prepare #准备发布打标签，这个时候会有一个交互过程。 -->
+			<!-- mvn release:rollback #如果上一步有什么问题，可以回滚 -->
+			<!-- mvn release:perform #发布，打包 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<!-- <version>2.5.3</version> -->
+				<configuration>
+					<useReleaseProfile>false</useReleaseProfile>
+					<!-- 每个模块获得与父POM相同的版本 -->
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>${lifecycle-mapping.version}</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[${lifecycle-mapping.version},)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<modules>
+		<module>kabouros-spring-dependencies</module>
+		<module>kabouros-spring-parent</module>
+	</modules>
+</project>
