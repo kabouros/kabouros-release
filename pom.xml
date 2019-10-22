@@ -17,6 +17,7 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/kabouros/kabouros-release.git</connection>
+		<!-- 注意：这里一定配置ssh地址，再利用本地的ssh自动推送代码，而不需要配置git用户名密码 -->
 		<developerConnection>scm:git:ssh://git@github.com/kabouros/kabouros-release.git</developerConnection>
 		<url>https://github.com/kabouros/kabouros-release</url>
 		<tag>HEAD</tag>
